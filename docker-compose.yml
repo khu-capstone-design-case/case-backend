@@ -1,0 +1,20 @@
+version: '3.1'
+services:
+  mysql:
+    container_name: case_mysql
+    image: mysql:8.2.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: case
+      MYSQL_ROOT_USERNAME: root
+      MYSQL_ROOT_PASSWORD:
+  mongodb:
+    container_name: case_mongodb
+    image: mongo:6.0.7
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=case
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=
