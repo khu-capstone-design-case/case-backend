@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class Talker {
 
     @Id
-    private String id;
+    private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
