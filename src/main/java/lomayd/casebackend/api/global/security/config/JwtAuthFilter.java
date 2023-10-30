@@ -1,0 +1,68 @@
+package lomayd.casebackend.api.global.security.config;
+
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import lomayd.casebackend.api.domain.user.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.filter.GenericFilterBean;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Arrays;
+
+@RequiredArgsConstructor
+public class JwtAuthFilter extends GenericFilterBean {
+
+    private final TokenService tokenService;
+
+    // Token 인증 정보를 SecurityContext 안에 저장
+    // JwtAuthFilter 통과시 데이터베이스를 거치지 않고 User의 아이디와 역할(권한)만 Security Context 안에 저장
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+
+        // Header로부터 Token 추출
+        String token = tokenService.resolveToken((HttpServletRequest) request);
+        HttpServletResponse httpServletResponse = (HttpServletResponse)response;
+
+        // 유효성 검증
+        try {
+            if (token != null && tokenService.verifyToken(token)) {
+                // Token에서 User의 아이디와 역할(권한)을 빼서 Security User 객체를 만들어 Authentication 객체 반환
+                User user = tokenService.getUserByToken(token);
+                Authentication auth = getAuthentication(user);
+                // 해당 Security User를 Security Context 안에 저장
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            }
+        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            ((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        } catch (ExpiredJwtException e) {
+            ((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        } catch (UnsupportedJwtException e) {
+            ((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        } catch (IllegalArgumentException e) {
+            ((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+
+        chain.doFilter(request, response);
+    }
+
+    // Token에서 역할(권한)을 빼서 Security User 객체를 만들어 Authentication 객체 반환
+    public Authentication getAuthentication(User user) {
+        return new UsernamePasswordAuthenticationToken(user, "",
+                Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
+    }
+}
