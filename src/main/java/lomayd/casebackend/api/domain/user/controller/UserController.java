@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/user")
@@ -67,5 +68,20 @@ public class UserController {
         User user = userService.getUserByRefreshToken(cookie.getValue());
 
         return issueToken(user.getId());
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest httpServletRequest) {
+
+        User user = tokenService.getUserByToken(tokenService.resolveToken(httpServletRequest));
+
+        userService.logout(user);
+
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", null)
+                .maxAge(0)
+                .path("/")
+                .build();
+
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).build();
     }
 }

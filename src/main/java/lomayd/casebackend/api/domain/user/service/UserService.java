@@ -60,4 +60,9 @@ public class UserService {
         return userRepository.findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당하는 유저가 없습니다"));
     }
+
+    public void logout(User user) {
+        user.setRefreshToken(null);
+        userRepository.save(user);
+    }
 }
