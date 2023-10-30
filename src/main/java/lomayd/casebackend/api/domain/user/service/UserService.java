@@ -35,5 +35,24 @@ public class UserService {
         }
     }
 
+    public Boolean loginUser(UserRequestDto.UserLogin data) {
+        User user = userRepository.findById(data.getId()).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 아이디 입니다"));
 
+        if (!user.getPassword().equals(data.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
+        } else {
+            return true;
+        }
+    }
+
+    public void storeRefreshToken(User user, String refreshToken) {
+        user.setRefreshToken(refreshToken);
+        userRepository.save(user);
+    }
+
+    public User getUserById(String id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당하는 유저가 없습니다"));
+    }
 }

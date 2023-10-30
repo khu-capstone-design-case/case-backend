@@ -14,4 +14,14 @@ public class UserRequestDto {
         private String password;
         private String name;
     }
+
+    @Builder
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UserLogin {
+        private String id;
+        private String password;
+    }
 }
