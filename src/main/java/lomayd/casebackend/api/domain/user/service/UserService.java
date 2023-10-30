@@ -55,4 +55,9 @@ public class UserService {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당하는 유저가 없습니다"));
     }
+
+    public User getUserByRefreshToken(String refreshToken) {
+        return userRepository.findByRefreshToken(refreshToken)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당하는 유저가 없습니다"));
+    }
 }

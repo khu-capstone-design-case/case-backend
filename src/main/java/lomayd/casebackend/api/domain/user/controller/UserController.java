@@ -1,5 +1,6 @@
 package lomayd.casebackend.api.domain.user.controller;
 
+import lomayd.casebackend.api.domain.user.User;
 import lomayd.casebackend.api.domain.user.dto.UserRequestDto;
 import lomayd.casebackend.api.domain.user.dto.UserResponseDto;
 import lomayd.casebackend.api.domain.user.service.UserService;
@@ -10,11 +11,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import javax.servlet.http.Cookie;
 
 @RestController
 @RequestMapping("/api/user")
@@ -57,5 +57,15 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK).headers(httpHeaders)
                 .body(UserResponseDto.UserLogin.of(token.getAccessToken()));
+    }
+
+    @PostMapping("/token")
+    public ResponseEntity<UserResponseDto.UserLogin> reissueToken(@CookieValue(value = "refreshToken") Cookie cookie) {
+
+        tokenService.verifyToken(cookie.getValue());
+
+        User user = userService.getUserByRefreshToken(cookie.getValue());
+
+        return issueToken(user.getId());
     }
 }
