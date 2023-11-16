@@ -17,23 +17,9 @@ public class Record {
 
     private int room;
 
-    private String user;
-
-    private String opponent;
+    private int seq;
 
     private String sender;
 
-    private long timestamp;
-
-    private int length;
-
-    private String summary;
-
     private String message;
-
-    private double positive;
-
-    private double neutral;
-
-    private double negative;
 }
