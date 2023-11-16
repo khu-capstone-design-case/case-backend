@@ -3,11 +3,14 @@ package lomayd.casebackend.api.domain.record.service;
 import lomayd.casebackend.api.domain.user.User;
 import lomayd.casebackend.api.global.security.config.TokenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.*;
+import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -15,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
 
 @Service
 @RequiredArgsConstructor
@@ -65,5 +69,28 @@ public class RecordService {
 
         String absolutePath = new File("").getAbsolutePath();
         return new UrlResource("file:" + absolutePath + "/record/" + fileName);
+    }
+
+    public void getRecordScript(String fileName, String user, String opponent) throws IOException {
+
+        File file = new File("/record/" + fileName);
+        byte[] fileContent = Files.readAllBytes(file.toPath());
+
+        MultipartBodyBuilder requestBody = new MultipartBodyBuilder();
+        requestBody.part("user",user);
+        requestBody.part("opponent",opponent);
+        requestBody.part("record",new ByteArrayResource(fileContent));
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        HttpEntity entity = new HttpEntity(requestBody.toString(), headers);
+
+        String url = "<https://example.com/api>";
+        ResponseEntity response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+
+        System.out.println(response.getBody());
     }
 }
