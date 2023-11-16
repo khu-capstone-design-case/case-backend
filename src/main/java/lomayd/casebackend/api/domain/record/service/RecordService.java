@@ -3,6 +3,8 @@ package lomayd.casebackend.api.domain.record.service;
 import lomayd.casebackend.api.domain.user.User;
 import lomayd.casebackend.api.global.security.config.TokenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -12,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +34,7 @@ public class RecordService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "음성 파일이 비어있습니다.");
         }
 
-        String path = "room/" + room++ + getFileExtension(record);
+        String path = "room-" + room++ + getFileExtension(record);
 
         File file = new File(absolutePath + path);
         file.mkdirs();
@@ -54,5 +57,13 @@ public class RecordService {
         }
 
         throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "음성 파일 확장자는 .m4a, .mp3만 가능합니다");
+    }
+
+    public Resource getRecord(HttpServletRequest httpServletRequest, String fileName) throws MalformedURLException {
+
+        User user = tokenService.getUserByToken(tokenService.resolveToken(httpServletRequest));
+
+        String absolutePath = new File("").getAbsolutePath();
+        return new UrlResource("file:" + absolutePath + "/record/" + fileName);
     }
 }
