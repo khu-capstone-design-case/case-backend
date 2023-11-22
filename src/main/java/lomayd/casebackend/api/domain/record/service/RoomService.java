@@ -7,6 +7,8 @@ import lomayd.casebackend.api.domain.record.repository.RoomRepository;
 import lomayd.casebackend.api.domain.user.User;
 import lomayd.casebackend.api.global.security.config.TokenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -16,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,5 +98,9 @@ public class RoomService {
         }
 
         throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "녹음 파일 확장자는 .m4a, .mp3만 가능합니다");
+    }
+
+    public Resource getRecord(String fileName) throws MalformedURLException {
+        return new UrlResource("file:" + absolutePath + fileName);
     }
 }
