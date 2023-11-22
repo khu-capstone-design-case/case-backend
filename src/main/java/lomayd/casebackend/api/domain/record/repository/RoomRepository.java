@@ -19,7 +19,4 @@ public interface RoomRepository extends MongoRepository<Room, Integer> {
 
     @Query(value="{user: ?0, room: ?1}")
     Optional<Room> findByUserAndRoom(String user, int room);
-
-    @Query(value="{user: ?0, room: ?1}", delete = true)
-    Optional<Room> deleteByUserAndRoom(String user, int room);
 }

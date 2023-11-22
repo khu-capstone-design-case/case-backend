@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,12 +45,20 @@ public class RecordService {
         return RecordResponseDto.ScriptListInfo.of(room, scriptListInfo);
     }
 
-    public void removeScriptList(HttpServletRequest httpServletRequest, int id) {
+    public void removeScriptList(HttpServletRequest httpServletRequest, int id) throws UnsupportedEncodingException {
         User user = tokenService.getUserByToken(tokenService.resolveToken(httpServletRequest));
 
-        roomRepository.deleteByUserAndRoom(user.getName(), id)
+        Room room = roomRepository.findByUserAndRoom(user.getName(), id)
                 .orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST, "사용자가 해당 음성 파일을 가지고 있지 않습니다."));
 
-        recordRepository.deleteAllByRoom(id);
+        File file = new File("./record/" + room.getFileName());
+
+        file.delete();
+
+        roomRepository.delete(room);
+
+        recordRepository.deleteAllByRoom(room.getRoom());
+
+        roomRepository.delete(room);
     }
 }

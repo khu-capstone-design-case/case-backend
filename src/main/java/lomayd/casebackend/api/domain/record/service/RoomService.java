@@ -58,6 +58,10 @@ public class RoomService {
 
         for(Room r : rooms) {
             recordRepository.deleteAllByRoom(r.getRoom());
+
+            File file = new File("./record/" + r.getFileName());
+
+            file.delete();
         }
 
         roomRepository.deleteAllByUserAndOpponent(user.getName(), opponent);
