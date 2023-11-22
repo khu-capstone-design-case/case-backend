@@ -17,6 +17,10 @@ public class Room {
 
     private int room;
 
+    private String fileName;
+
+    private int speakerNum;
+
     private String title;
 
     private String user;
