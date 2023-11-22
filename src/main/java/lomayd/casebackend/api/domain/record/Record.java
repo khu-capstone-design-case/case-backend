@@ -19,7 +19,17 @@ public class Record {
 
     private int seq;
 
-    private String sender;
+    private String speaker;
 
     private String message;
+
+    private double startTime;
+
+    private double endTime;
+
+    private double positive;
+
+    private double neutral;
+
+    private double negative;
 }

@@ -13,13 +13,19 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Room {
 
     @Id
-    private String room;
+    private String id;
+
+    private int room;
+
+    private String title;
 
     private String user;
 
     private String opponent;
 
     private String summary;
+
+    private long timestamp;
 
     private int length;
 
