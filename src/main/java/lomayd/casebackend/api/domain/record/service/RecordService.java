@@ -40,4 +40,13 @@ public class RecordService {
 
         return RecordResponseDto.ScriptListInfo.of(room, scriptListInfo);
     }
+
+    public void removeScriptList(HttpServletRequest httpServletRequest, int id) {
+        User user = tokenService.getUserByToken(tokenService.resolveToken(httpServletRequest));
+
+        Room room = roomRepository.findByUserAndRoom(user.getName(), id)
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST, "사용자가 해당 음성 파일을 가지고 있지 않습니다."));
+
+        recordRepository.deleteAllByRoom(room.getRoom());
+    }
 }

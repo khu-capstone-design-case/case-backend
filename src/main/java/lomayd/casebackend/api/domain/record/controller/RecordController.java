@@ -18,4 +18,10 @@ public class RecordController {
     public ResponseEntity<RecordResponseDto.ScriptListInfo> getScriptList(HttpServletRequest httpServletRequest, @RequestParam int id) {
         return ResponseEntity.ok(recordService.getScriptList(httpServletRequest, id));
     }
+
+    @DeleteMapping("/api/user/page/record")
+    public ResponseEntity<Void> removeScriptList(HttpServletRequest httpServletRequest, @RequestParam int id) {
+        recordService.removeScriptList(httpServletRequest, id);
+        return ResponseEntity.ok().build();
+    }
 }
