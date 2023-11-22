@@ -5,12 +5,14 @@ import lomayd.casebackend.api.domain.record.dto.RoomResponseDto;
 import lomayd.casebackend.api.domain.record.repository.RecordRepository;
 import lomayd.casebackend.api.domain.record.repository.RoomRepository;
 import lomayd.casebackend.api.domain.user.User;
+import lomayd.casebackend.api.domain.user.repository.TalkerRepository;
 import lomayd.casebackend.api.global.security.config.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -24,10 +26,12 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class RoomService {
 
     private final RoomRepository roomRepository;
     private final RecordRepository recordRepository;
+    private final TalkerRepository talkerRepository;
     private final TokenService tokenService;
 
     private final String absolutePath = new File("").getAbsolutePath() + "/record/";
@@ -57,6 +61,8 @@ public class RoomService {
         }
 
         roomRepository.deleteAllByUserAndOpponent(user.getName(), opponent);
+
+        talkerRepository.deleteByOpponent(opponent);
     }
 
     public void uploadRecord(HttpServletRequest httpServletRequest, String opponent, int speakerNum, String title, MultipartFile file) throws IOException {

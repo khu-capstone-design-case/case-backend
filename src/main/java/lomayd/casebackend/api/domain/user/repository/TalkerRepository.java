@@ -16,4 +16,6 @@ public interface TalkerRepository extends JpaRepository<Talker, Integer> {
 
     @Query("SELECT t.opponent FROM Talker t WHERE t.user = :user")
     List<String> findOpponents(User user);
+
+    void deleteByOpponent(String opponent);
 }
