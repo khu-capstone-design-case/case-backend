@@ -10,6 +10,9 @@ import java.util.List;
 @Repository
 public interface RoomRepository extends MongoRepository<Room, Integer> {
 
-    @Query("{user: ?0, opponent: ?1}")
+    @Query(value="{user: ?0, opponent: ?1}")
     List<Room> findAllByUserAndOpponent(String user, String opponent);
+
+    @Query(value="{user: ?0, opponent: ?1}", delete=true)
+    List<Room> deleteAllByUserAndOpponent(String user, String opponent);
 }
