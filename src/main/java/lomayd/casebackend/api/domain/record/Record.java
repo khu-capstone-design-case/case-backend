@@ -23,9 +23,9 @@ public class Record {
 
     private String message;
 
-    private double startTime;
+    private long startTime;
 
-    private double endTime;
+    private long endTime;
 
     private double positive;
 
