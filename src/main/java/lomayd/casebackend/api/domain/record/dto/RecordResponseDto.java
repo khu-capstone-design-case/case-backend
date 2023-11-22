@@ -17,12 +17,14 @@ public class RecordResponseDto {
 
         private int id;
         private String title;
+        private String fileName;
         private List<ScriptInfo> script;
 
         public static RecordResponseDto.ScriptListInfo of(Room room, List<ScriptInfo> script) {
-            return RecordResponseDto.ScriptListInfo.builder()
+            return ScriptListInfo.builder()
                     .id(room.getRoom())
                     .title(room.getTitle())
+                    .fileName(room.getFileName())
                     .script(script)
                     .build();
         }
