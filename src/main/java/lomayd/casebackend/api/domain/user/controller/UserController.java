@@ -18,20 +18,19 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
     private final TokenService tokenService;
 
-    @PostMapping("/join")
+    @PostMapping("/api/user/join")
     public ResponseEntity<Void> joinUser(@RequestBody UserRequestDto.UserJoin data) {
         userService.joinUser(data);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PostMapping("/login")
+    @PostMapping("/api/user/login")
     public ResponseEntity<UserResponseDto.UserLogin> loginUser(@RequestBody UserRequestDto.UserLogin data) {
 
         if (userService.loginUser(data)) {
@@ -60,7 +59,7 @@ public class UserController {
                 .body(UserResponseDto.UserLogin.of(token.getAccessToken()));
     }
 
-    @PostMapping("/token")
+    @PostMapping("/api/user/token")
     public ResponseEntity<UserResponseDto.UserLogin> reissueToken(@CookieValue(value = "refreshToken") Cookie cookie) {
 
         tokenService.verifyToken(cookie.getValue());
@@ -70,7 +69,7 @@ public class UserController {
         return issueToken(user.getId());
     }
 
-    @PostMapping("/logout")
+    @PostMapping("/api/user/logout")
     public ResponseEntity<Void> logout(HttpServletRequest httpServletRequest) {
 
         User user = tokenService.getUserByToken(tokenService.resolveToken(httpServletRequest));

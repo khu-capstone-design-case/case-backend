@@ -31,4 +31,10 @@ public class TalkerService {
 
         return TalkerResponseDto.UserPageInfo.of(user, talkerInfoList);
     }
+
+    public TalkerResponseDto.Opponent getOpponent(HttpServletRequest httpServletRequest) {
+        User user = tokenService.getUserByToken(tokenService.resolveToken(httpServletRequest));
+
+        return TalkerResponseDto.Opponent.of(talkerRepository.findOpponents(user));
+    }
 }

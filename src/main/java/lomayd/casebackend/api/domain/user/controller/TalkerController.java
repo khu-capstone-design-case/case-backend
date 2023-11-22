@@ -11,14 +11,18 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class TalkerController {
 
     private final TalkerService talkerService;
 
-    @GetMapping
+    @GetMapping("/api/user/page")
     public ResponseEntity<TalkerResponseDto.UserPageInfo> getUserPage(HttpServletRequest httpServletRequest) {
         return ResponseEntity.ok(talkerService.getUserPage(httpServletRequest));
+    }
+
+    @GetMapping("/api/record/opponent")
+    public ResponseEntity<TalkerResponseDto.Opponent> getOpponent(HttpServletRequest httpServletRequest) {
+        return ResponseEntity.ok(talkerService.getOpponent(httpServletRequest));
     }
 }

@@ -17,13 +17,13 @@ public class TalkerResponseDto {
 
         private String id;
         private String name;
-        List<TalkerInfo> result;
+        List<TalkerInfo> talker;
 
         public static TalkerResponseDto.UserPageInfo of(User user, List<TalkerInfo> talkerInfoList) {
             return TalkerResponseDto.UserPageInfo.builder()
                     .id(user.getId())
                     .name(user.getName())
-                    .result(talkerInfoList)
+                    .talker(talkerInfoList)
                     .build();
         }
     }
@@ -51,4 +51,20 @@ public class TalkerResponseDto {
                     .build();
         }
     }
+
+    @Builder
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Opponent {
+        private List<String> opponent;
+
+        public static TalkerResponseDto.Opponent of(List<String> opponents) {
+            return TalkerResponseDto.Opponent.builder()
+                    .opponent(opponents)
+                    .build();
+        }
+    }
+
 }
