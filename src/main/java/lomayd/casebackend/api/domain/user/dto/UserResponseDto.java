@@ -11,10 +11,12 @@ public class UserResponseDto {
     @AllArgsConstructor
     public static class UserLogin {
         private String accessToken;
+        private String id;
 
-        public static UserResponseDto.UserLogin of(String accessToken) {
+        public static UserResponseDto.UserLogin of(String accessToken, String id) {
             return UserLogin.builder()
                     .accessToken(accessToken)
+                    .id(id)
                     .build();
         }
     }
