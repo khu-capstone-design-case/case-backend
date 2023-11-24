@@ -4,6 +4,7 @@ import lomayd.casebackend.api.domain.record.dto.RoomResponseDto;
 import lomayd.casebackend.api.domain.record.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,7 +36,7 @@ public class RoomController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/api/record/{fileName}")
+    @GetMapping(value = "/api/record/{fileName}", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public Resource getRecord(@PathVariable String fileName) throws MalformedURLException {
         return roomService.getRecord(fileName);
     }
