@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface RoomRepository extends MongoRepository<Room, Integer> {
 
-    @Query(value="{user: ?0, opponent: ?1}")
+    @Query(value="{user: ?0, opponent: ?1}", sort= "{room: -1}")
     List<Room> findAllByUserAndOpponent(String user, String opponent);
 
     @Query(value="{user: ?0, opponent: ?1}", delete=true)

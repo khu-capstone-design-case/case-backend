@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface RecordRepository extends MongoRepository<Record, String> {
 
-    @Query(value="{room: ?0}")
+    @Query(value="{room: ?0}", sort= "{seq: 1}")
     List<Record> findAllByRoom(int room);
 
     @Query(value="{room: ?0}", delete = true)

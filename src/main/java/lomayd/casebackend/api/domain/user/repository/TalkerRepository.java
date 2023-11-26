@@ -7,11 +7,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface TalkerRepository extends JpaRepository<Talker, Integer> {
 
+    @Query("SELECT t FROM Talker t WHERE t.user = :user ORDER BY t.id ASC")
     List<Talker> findByUser(User user);
 
     @Query("SELECT t.opponent FROM Talker t WHERE t.user = :user")
