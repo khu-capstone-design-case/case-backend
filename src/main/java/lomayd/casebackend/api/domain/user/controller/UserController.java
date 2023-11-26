@@ -46,7 +46,7 @@ public class UserController {
         ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", token.getRefreshToken())
                 .maxAge(30 * 24 * 60 * 60) // 만료 기한
                 .path("/")
-                .secure(true)
+                .sameSite("None")
                 .httpOnly(true)
                 .build();
 
