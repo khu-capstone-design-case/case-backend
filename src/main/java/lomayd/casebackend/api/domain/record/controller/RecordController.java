@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,5 +25,10 @@ public class RecordController {
     public ResponseEntity<Void> removeScriptList(HttpServletRequest httpServletRequest, @RequestParam int id) throws UnsupportedEncodingException {
         recordService.removeScriptList(httpServletRequest, id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/api/user/page/script")
+    public ResponseEntity<RecordResponseDto.ScriptAnalysisInfo> analyzeScript(HttpServletRequest httpServletRequest, @RequestParam int id, @RequestParam List<Integer> seq) {
+        return ResponseEntity.ok(recordService.analyzeScript(httpServletRequest, id, seq));
     }
 }

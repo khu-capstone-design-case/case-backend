@@ -77,4 +77,40 @@ public class RecordResponseDto {
         private String summary;
         private List<RecordResponseDto.ScriptInfo> message;
     }
+
+    @Builder
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ScriptAnalysisResult {
+
+        private double positive;
+        private double neutral;
+        private double negative;
+    }
+
+    @Builder
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ScriptAnalysisInfo {
+
+        private int id;
+        private List<Integer> seq;
+        private double positive;
+        private double neutral;
+        private double negative;
+
+        public static RecordResponseDto.ScriptAnalysisInfo of(int id, List<Integer> seq, double positive, double neutral, double negative) {
+            return ScriptAnalysisInfo.builder()
+                    .id(id)
+                    .seq(seq)
+                    .positive(positive)
+                    .neutral(neutral)
+                    .negative(negative)
+                    .build();
+        }
+    }
 }

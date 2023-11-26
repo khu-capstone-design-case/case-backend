@@ -21,9 +21,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -53,7 +53,7 @@ public class RecordService {
         return RecordResponseDto.ScriptListInfo.of(room, scriptListInfo);
     }
 
-    public void removeScriptList(HttpServletRequest httpServletRequest, int id) throws UnsupportedEncodingException {
+    public void removeScriptList(HttpServletRequest httpServletRequest, int id) {
         User user = tokenService.getUserByToken(tokenService.resolveToken(httpServletRequest));
 
         Room room = roomRepository.findByUserAndRoom(user.getName(), id)
@@ -129,5 +129,38 @@ public class RecordService {
         else {
             return room.getOpponent();
         }
+    }
+
+    public RecordResponseDto.ScriptAnalysisInfo analyzeScript(HttpServletRequest httpServletRequest, int id, List<Integer> seq) {
+        User user = tokenService.getUserByToken(tokenService.resolveToken(httpServletRequest));
+
+        Room room = roomRepository.findByUserAndRoom(user.getName(), id)
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST, "사용자가 해당 음성 파일을 가지고 있지 않습니다."));
+
+        List<String> script = new ArrayList<>();
+
+        for(int s : seq) {
+            Record record = recordRepository.findByRoomAndSeq(room.getRoom(), s)
+                    .orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 순서(seq)가 존재하지 않습니다."));
+
+            script.add(record.getMessage());
+        }
+
+        URI uri = URI.create("localhost:8000/api/script");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("script", script);
+
+        HttpEntity<?> request = new HttpEntity<>(params, headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        RecordResponseDto.ScriptAnalysisResult response =
+                restTemplate.exchange(uri, HttpMethod.POST, request, RecordResponseDto.ScriptAnalysisResult.class).getBody();
+
+        return RecordResponseDto.ScriptAnalysisInfo.of(id, seq, response.getPositive(), response.getNeutral(), response.getNegative());
     }
 }
