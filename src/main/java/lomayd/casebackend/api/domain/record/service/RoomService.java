@@ -4,6 +4,7 @@ import lomayd.casebackend.api.domain.record.Room;
 import lomayd.casebackend.api.domain.record.dto.RoomResponseDto;
 import lomayd.casebackend.api.domain.record.repository.RecordRepository;
 import lomayd.casebackend.api.domain.record.repository.RoomRepository;
+import lomayd.casebackend.api.domain.user.Talker;
 import lomayd.casebackend.api.domain.user.User;
 import lomayd.casebackend.api.domain.user.repository.TalkerRepository;
 import lomayd.casebackend.api.global.security.config.TokenService;
@@ -32,10 +33,12 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final RecordRepository recordRepository;
     private final TalkerRepository talkerRepository;
+    private final RecordService recordService;
     private final TokenService tokenService;
 
     private final String absolutePath = new File("").getAbsolutePath() + "/record/";
     private int recordNum = 1;
+    private int talkerNum = 1;
 
     public RoomResponseDto.RecordListInfo getRecordList(HttpServletRequest httpServletRequest, String opponent) {
         User user = tokenService.getUserByToken(tokenService.resolveToken(httpServletRequest));
@@ -81,15 +84,37 @@ public class RoomService {
                 .title(title)
                 .user(user.getName())
                 .opponent(opponent)
+                .timestamp(file.getResource().lastModified())
                 .build();
 
         roomRepository.save(room);
+
+        Talker talker;
+
+        if(talkerRepository.existsByOpponent(opponent)) {
+            talker = talkerRepository.findByOpponent(opponent);
+        }
+        else {
+            talker = Talker.builder()
+                    .id(talkerNum)
+                    .user(user)
+                    .opponent(opponent)
+                    .positive(0)
+                    .neutral(0)
+                    .negative(0)
+                    .build();
+
+            talkerRepository.save(talker);
+        }
 
         File tempFile = new File(absolutePath + path);
         tempFile.mkdirs();
         file.transferTo(tempFile);
 
         recordNum++;
+        talkerNum++;
+
+        recordService.analyzeRecord(room, talker, path, user.getName(), speakerNum, file);
     }
 
     private String getFileExtension(MultipartFile data) {

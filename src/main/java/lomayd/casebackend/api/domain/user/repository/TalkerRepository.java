@@ -18,4 +18,8 @@ public interface TalkerRepository extends JpaRepository<Talker, Integer> {
     List<String> findOpponents(User user);
 
     void deleteByOpponent(String opponent);
+
+    boolean existsByOpponent(String opponent);
+
+    Talker findByOpponent(String opponent);
 }

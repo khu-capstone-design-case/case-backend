@@ -59,4 +59,22 @@ public class RecordResponseDto {
                     .build();
         }
     }
+
+    @Builder
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RecordAnalysisResult {
+
+        private String fileName;
+        private String user;
+        private int speakerNum;
+        private int length;
+        private double positive;
+        private double neutral;
+        private double negative;
+        private String summary;
+        private List<RecordResponseDto.ScriptInfo> message;
+    }
 }
