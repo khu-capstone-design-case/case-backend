@@ -1,14 +1,32 @@
-version: '3.1'
+version: "3.1"
+
 services:
+  spring:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./:/src
+    depends_on:
+      - mysql
+      - mongodb
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3308/case?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD:
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
   mysql:
     container_name: case_mysql
     image: mysql:8.2.0
     ports:
-      - "3306:3306"
+      - "3308:3308"
     environment:
       MYSQL_DATABASE: case
       MYSQL_ROOT_USERNAME: root
       MYSQL_ROOT_PASSWORD:
+      MYSQL_TCP_PORT: 3308
   mongodb:
     container_name: case_mongodb
     image: mongo:6.0.7
