@@ -132,7 +132,11 @@ public class RoomService {
             return ".mp3";
         }
 
-        throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "녹음 파일 확장자는 .m4a, .mp3만 가능합니다");
+        if (contentType.contains("audio/wav")) {
+            return ".wav";
+        }
+
+        throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "녹음 파일 확장자는 .m4a, .mp3, .wav만 가능합니다");
     }
 
     public Resource getRecord(String fileName) throws MalformedURLException {
