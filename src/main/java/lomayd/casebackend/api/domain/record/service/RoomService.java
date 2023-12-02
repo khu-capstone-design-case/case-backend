@@ -77,6 +77,10 @@ public class RoomService {
 
         String path = "record-" + recordNum + getFileExtension(file);
 
+        File tempFile = new File(absolutePath + path);
+        tempFile.mkdirs();
+        file.transferTo(tempFile);
+
         Room room = Room.builder()
                 .room(recordNum)
                 .fileName(path)
@@ -84,7 +88,7 @@ public class RoomService {
                 .title(title)
                 .user(user.getName())
                 .opponent(opponent)
-                .timestamp(file.getResource().lastModified())
+                .timestamp(tempFile.lastModified())
                 .build();
 
         roomRepository.save(room);
@@ -106,10 +110,6 @@ public class RoomService {
 
             talkerRepository.save(talker);
         }
-
-        File tempFile = new File(absolutePath + path);
-        tempFile.mkdirs();
-        file.transferTo(tempFile);
 
         recordNum++;
         talkerNum++;
