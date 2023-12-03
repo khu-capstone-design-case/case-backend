@@ -77,6 +77,10 @@ public class RoomService {
 
         String path = "record-" + recordNum + getFileExtension(file);
 
+        File tempFile = new File(absolutePath + path);
+        tempFile.mkdirs();
+        file.transferTo(tempFile);
+
         Room room = Room.builder()
                 .room(recordNum)
                 .fileName(path)
@@ -84,7 +88,7 @@ public class RoomService {
                 .title(title)
                 .user(user.getName())
                 .opponent(opponent)
-                .timestamp(file.getResource().lastModified())
+                .timestamp(tempFile.lastModified())
                 .build();
 
         roomRepository.save(room);
@@ -107,10 +111,6 @@ public class RoomService {
             talkerRepository.save(talker);
         }
 
-        File tempFile = new File(absolutePath + path);
-        tempFile.mkdirs();
-        file.transferTo(tempFile);
-
         recordNum++;
         talkerNum++;
 
@@ -132,7 +132,11 @@ public class RoomService {
             return ".mp3";
         }
 
-        throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "녹음 파일 확장자는 .m4a, .mp3만 가능합니다");
+        if (contentType.contains("audio/wav")) {
+            return ".wav";
+        }
+
+        throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "녹음 파일 확장자는 .m4a, .mp3, .wav만 가능합니다");
     }
 
     public Resource getRecord(String fileName) throws MalformedURLException {
