@@ -47,6 +47,7 @@ public class UserController {
                 .maxAge(30 * 24 * 60 * 60) // 만료 기한
                 .path("/")
                 .sameSite("None")
+                .secure(true)
                 .httpOnly(true)
                 .build();
 
