@@ -116,7 +116,7 @@ public class RoomService {
         recordNum++;
         talkerNum++;
 
-        recordService.analyzeRecord(room, talker, path, user.getName(), speakerNum, file);
+        recordService.analyzeRecord(room, talker, path, user.getName(), speakerNum, tempFile);
     }
 
     private String getFileExtension(MultipartFile data) {

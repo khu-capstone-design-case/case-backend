@@ -10,18 +10,17 @@ import lomayd.casebackend.api.domain.user.User;
 import lomayd.casebackend.api.domain.user.repository.TalkerRepository;
 import lomayd.casebackend.api.global.security.config.TokenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -70,8 +69,8 @@ public class RecordService {
         roomRepository.delete(room);
     }
 
-    public void analyzeRecord(Room room, Talker talker, String fileName, String user, int speakerNum, MultipartFile file) {
-        URI uri = URI.create("localhost:8000/api/record");
+    public void analyzeRecord(Room room, Talker talker, String fileName, String user, int speakerNum, File file) {
+        String url = "http://localhost:8000/api/record";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -80,14 +79,14 @@ public class RecordService {
         params.add("fileName", fileName);
         params.add("user", user);
         params.add("speakerNum", speakerNum);
-        params.add("file", file);
+        params.add("file", new FileSystemResource(file));
 
-        HttpEntity<?> request = new HttpEntity<>(params, headers);
+        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(params, headers);
 
         RestTemplate restTemplate = new RestTemplate();
 
         RecordResponseDto.RecordAnalysisResult response =
-                restTemplate.exchange(uri, HttpMethod.POST, request, RecordResponseDto.RecordAnalysisResult.class).getBody();
+                restTemplate.exchange(url, HttpMethod.POST, request, RecordResponseDto.RecordAnalysisResult.class).getBody();
 
         room.setSummary(response.getSummary());
         room.setLength(response.getLength());
@@ -126,7 +125,7 @@ public class RecordService {
     }
 
     private String chooseSpeaker(Room room, String index) {
-        if(index.equals("1")) {
+        if(index.equals("0")) {
             return room.getUser();
         }
         else {
@@ -149,7 +148,7 @@ public class RecordService {
             script.add(record.getMessage());
         }
 
-        URI uri = URI.create("localhost:8000/api/script");
+        String url = "http://localhost:8000/api/script";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -162,7 +161,7 @@ public class RecordService {
         RestTemplate restTemplate = new RestTemplate();
 
         RecordResponseDto.ScriptAnalysisResult response =
-                restTemplate.exchange(uri, HttpMethod.POST, request, RecordResponseDto.ScriptAnalysisResult.class).getBody();
+                restTemplate.exchange(url, HttpMethod.POST, request, RecordResponseDto.ScriptAnalysisResult.class).getBody();
 
         return RecordResponseDto.ScriptAnalysisInfo.of(id, seq, response.getPositive(), response.getNeutral(), response.getNegative());
     }
