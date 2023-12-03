@@ -22,6 +22,12 @@ public class Talker {
     private String opponent;
 
     @Column
+    private int length;
+
+    @Column
+    private double point;
+
+    @Column
     private double positive;
 
     @Column

@@ -33,6 +33,8 @@ public class Room {
 
     private int length;
 
+    private double point;
+
     private double positive;
 
     private double neutral;

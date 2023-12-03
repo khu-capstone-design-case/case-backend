@@ -36,6 +36,7 @@ public class RoomResponseDto {
         private String summary;
         private long timestamp;
         private int length;
+        private double point;
         private double positive;
         private double neutral;
         private double negative;
@@ -47,6 +48,7 @@ public class RoomResponseDto {
                     .summary(room.getSummary())
                     .timestamp(room.getTimestamp())
                     .length(room.getLength())
+                    .point(room.getPoint())
                     .positive(room.getPositive())
                     .neutral(room.getNeutral())
                     .negative(room.getNegative())

@@ -103,6 +103,8 @@ public class RoomService {
                     .id(talkerNum)
                     .user(user)
                     .opponent(opponent)
+                    .length(0)
+                    .point(0)
                     .positive(0)
                     .neutral(0)
                     .negative(0)

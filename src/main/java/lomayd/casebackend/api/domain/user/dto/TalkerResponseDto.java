@@ -37,14 +37,18 @@ public class TalkerResponseDto {
 
         private int id;
         private String opponent;
+        private int length;
+        private double point;
         private double positive;
         private double neutral;
         private double negative;
 
         public static TalkerResponseDto.TalkerInfo of(Talker talker) {
-            return TalkerResponseDto.TalkerInfo.builder()
+            return TalkerInfo.builder()
                     .id(talker.getId())
                     .opponent(talker.getOpponent())
+                    .length(talker.getLength())
+                    .point(talker.getPoint())
                     .positive(talker.getPositive())
                     .neutral(talker.getNeutral())
                     .negative(talker.getNegative())

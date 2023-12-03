@@ -91,6 +91,7 @@ public class RecordService {
 
         room.setSummary(response.getSummary());
         room.setLength(response.getLength());
+        room.setPoint(50 + response.getPositive() - response.getNegative());
         room.setPositive(response.getPositive());
         room.setNeutral(response.getNeutral());
         room.setNegative(response.getNegative());
@@ -104,7 +105,7 @@ public class RecordService {
                     .speaker(chooseSpeaker(room, script.getSpeaker()))
                     .message(script.getMessage())
                     .startTime(room.getTimestamp() + script.getStartTime())
-                    .startTime(room.getTimestamp() + script.getEndTime())
+                    .endTime(room.getTimestamp() + script.getEndTime())
                     .positive(script.getPositive())
                     .neutral(script.getNeutral())
                     .negative(script.getNegative())
@@ -115,6 +116,8 @@ public class RecordService {
 
         int currentRecord = roomRepository.countByUser(user);
 
+        talker.setLength(talker.getLength() + room.getLength());
+        talker.setPoint((talker.getPoint() * (currentRecord-1) + room.getPoint()) / currentRecord);
         talker.setPositive((talker.getPositive() * (currentRecord-1) + room.getPositive()) / currentRecord);
         talker.setNeutral((talker.getNeutral() * (currentRecord-1) + room.getNeutral()) / currentRecord);
         talker.setNegative((talker.getNegative() * (currentRecord-1) + room.getNegative()) / currentRecord);
