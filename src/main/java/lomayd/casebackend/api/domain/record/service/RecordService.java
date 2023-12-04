@@ -11,6 +11,7 @@ import lomayd.casebackend.api.domain.user.User;
 import lomayd.casebackend.api.domain.user.repository.TalkerRepository;
 import lomayd.casebackend.api.global.security.config.TokenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,12 @@ public class RecordService {
     private final RoomRepository roomRepository;
     private final TalkerRepository talkerRepository;
     private final TokenService tokenService;
+
+    @Value("${ai.server-ip}")
+    private String ip;
+
+    @Value("${ai.server-port}")
+    private String port;
 
     public RecordResponseDto.ScriptListInfo getScriptList(HttpServletRequest httpServletRequest, int id) {
         User user = tokenService.getUserByToken(tokenService.resolveToken(httpServletRequest));
@@ -71,7 +78,7 @@ public class RecordService {
     }
 
     public void analyzeRecord(Room room, Talker talker, String fileName, String user, int speakerNum, File file) {
-        String url = "http://localhost:8132/api/record";
+        String url = "http://" + ip + ":" + port + "/api/record";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -149,7 +156,7 @@ public class RecordService {
             script.add(record.getMessage());
         }
 
-        String url = "http://localhost:8132/api/script";
+        String url = "http://" + ip + ":" + port + "/api/record";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

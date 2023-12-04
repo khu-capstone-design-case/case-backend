@@ -25,3 +25,7 @@ server:
 
 jwt:
   secretKey: {SECRET_KEY}
+
+ai:
+  server-ip: {SERVER_IP}
+  server-port: {SERVER_PORT}
