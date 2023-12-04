@@ -26,7 +26,7 @@ public class RecordController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/api/user/page/script")
+    @PostMapping("/api/user/page/script")
     public ResponseEntity<RecordResponseDto.ScriptAnalysisInfo> analyzeScript(HttpServletRequest httpServletRequest, @RequestBody RecordRequestDto.ScriptAnalysisInput data) {
         return ResponseEntity.ok(recordService.analyzeScript(httpServletRequest, data));
     }
