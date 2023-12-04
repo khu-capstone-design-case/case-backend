@@ -37,7 +37,7 @@ cd ./case-backend
 
 docker-compose up -d
 
-[Write down {JWT SECRET KEY} in /src/main/resources/application.yml] 
+[Write down {jwt.secretKey}, {ai.server-ip}, {ai.server-port} in /src/main/resources/application.yml] 
 
 [Write down "spring.datasource.password", "spring.data.mongodb.password" in /src/main/resources/application-db.yml] 
 
