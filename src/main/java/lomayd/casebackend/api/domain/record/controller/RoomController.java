@@ -30,9 +30,15 @@ public class RoomController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/api/record/upload")
-    public ResponseEntity<Void> uploadRecord(HttpServletRequest httpServletRequest, @RequestParam String opponent, @RequestParam int speakerNum, @RequestParam String title, @RequestParam MultipartFile file) throws IOException {
-        roomService.uploadRecord(httpServletRequest, opponent, speakerNum, title, file);
+    @PostMapping("/api/record/upload/init")
+    public ResponseEntity<Void> uploadRecordInit(HttpServletRequest httpServletRequest, @RequestParam String opponent, @RequestParam int speakerNum, @RequestParam String title, @RequestParam MultipartFile file) throws IOException {
+        roomService.uploadRecordInit(httpServletRequest, opponent, speakerNum, title, file);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/api/record/upload/analyze")
+    public ResponseEntity<Void> uploadRecordAnalyze() {
+        roomService.uploadRecordAnalyze();
         return ResponseEntity.ok().build();
     }
 

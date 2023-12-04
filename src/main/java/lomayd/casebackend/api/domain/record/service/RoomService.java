@@ -9,9 +9,11 @@ import lomayd.casebackend.api.domain.user.User;
 import lomayd.casebackend.api.domain.user.repository.TalkerRepository;
 import lomayd.casebackend.api.global.security.config.TokenService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -28,6 +30,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class RoomService {
 
     private final RoomRepository roomRepository;
@@ -40,8 +43,15 @@ public class RoomService {
     private int recordNum = 1;
     private int talkerNum = 1;
 
+    private Room room;
+    private Talker talker;
+    private String path;
+    private User user;
+    private File tempFile;
+    private int tempSpeakerNum;
+
     public RoomResponseDto.RecordListInfo getRecordList(HttpServletRequest httpServletRequest, String opponent) {
-        User user = tokenService.getUserByToken(tokenService.resolveToken(httpServletRequest));
+        user = tokenService.getUserByToken(tokenService.resolveToken(httpServletRequest));
 
         List<Room> recordList = roomRepository.findAllByUserAndOpponent(user.getId(), opponent);
 
@@ -55,7 +65,7 @@ public class RoomService {
     }
 
     public void removeRecordList(HttpServletRequest httpServletRequest, String opponent) {
-        User user = tokenService.getUserByToken(tokenService.resolveToken(httpServletRequest));
+        user = tokenService.getUserByToken(tokenService.resolveToken(httpServletRequest));
 
         List<Room> rooms = roomRepository.findAllByUserAndOpponent(user.getId(), opponent);
 
@@ -72,16 +82,16 @@ public class RoomService {
         talkerRepository.deleteByOpponent(opponent);
     }
 
-    public void uploadRecord(HttpServletRequest httpServletRequest, String opponent, int speakerNum, String title, MultipartFile file) throws IOException {
-        User user = tokenService.getUserByToken(tokenService.resolveToken(httpServletRequest));
+    public void uploadRecordInit(HttpServletRequest httpServletRequest, String opponent, int speakerNum, String title, MultipartFile file) throws IOException {
+        user = tokenService.getUserByToken(tokenService.resolveToken(httpServletRequest));
 
-        String path = "record-" + recordNum + getFileExtension(file);
+        path = "record-" + recordNum + getFileExtension(file);
 
-        File tempFile = new File(absolutePath + path);
+        tempFile = new File(absolutePath + path);
         tempFile.mkdirs();
         file.transferTo(tempFile);
 
-        Room room = Room.builder()
+        room = Room.builder()
                 .room(recordNum)
                 .fileName(path)
                 .speakerNum(speakerNum)
@@ -92,8 +102,6 @@ public class RoomService {
                 .build();
 
         roomRepository.save(room);
-
-        Talker talker;
 
         if(talkerRepository.existsByOpponent(opponent)) {
             talker = talkerRepository.findByOpponent(opponent);
@@ -113,10 +121,16 @@ public class RoomService {
             talkerRepository.save(talker);
         }
 
+        tempSpeakerNum = speakerNum;
+
         recordNum++;
         talkerNum++;
+    }
 
-        recordService.analyzeRecord(room, talker, path, user.getId(), speakerNum, tempFile);
+    @Async
+    public void uploadRecordAnalyze() {
+        log.info("Record Analyze - " + "user: \"" + user.getId() + "\", fileName: \"" + path + "\", speakerNum: " + tempSpeakerNum);
+        recordService.analyzeRecord(room, talker, path, user.getId(), tempSpeakerNum, tempFile);
     }
 
     private String getFileExtension(MultipartFile data) {
