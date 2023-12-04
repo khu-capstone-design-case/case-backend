@@ -1,5 +1,6 @@
 package lomayd.casebackend.api.domain.record.controller;
 
+import lomayd.casebackend.api.domain.record.dto.RecordRequestDto;
 import lomayd.casebackend.api.domain.record.dto.RecordResponseDto;
 import lomayd.casebackend.api.domain.record.service.RecordService;
 import lombok.RequiredArgsConstructor;
@@ -7,8 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,13 +21,13 @@ public class RecordController {
     }
 
     @DeleteMapping("/api/user/page/record")
-    public ResponseEntity<Void> removeScriptList(HttpServletRequest httpServletRequest, @RequestParam int id) throws UnsupportedEncodingException {
+    public ResponseEntity<Void> removeScriptList(HttpServletRequest httpServletRequest, @RequestParam int id) {
         recordService.removeScriptList(httpServletRequest, id);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/api/user/page/script")
-    public ResponseEntity<RecordResponseDto.ScriptAnalysisInfo> analyzeScript(HttpServletRequest httpServletRequest, @RequestParam int id, @RequestParam List<Integer> seq) {
-        return ResponseEntity.ok(recordService.analyzeScript(httpServletRequest, id, seq));
+    public ResponseEntity<RecordResponseDto.ScriptAnalysisInfo> analyzeScript(HttpServletRequest httpServletRequest, @RequestBody RecordRequestDto.ScriptAnalysisInput data) {
+        return ResponseEntity.ok(recordService.analyzeScript(httpServletRequest, data));
     }
 }

@@ -2,6 +2,7 @@ package lomayd.casebackend.api.domain.record.service;
 
 import lomayd.casebackend.api.domain.record.Record;
 import lomayd.casebackend.api.domain.record.Room;
+import lomayd.casebackend.api.domain.record.dto.RecordRequestDto;
 import lomayd.casebackend.api.domain.record.dto.RecordResponseDto;
 import lomayd.casebackend.api.domain.record.repository.RecordRepository;
 import lomayd.casebackend.api.domain.record.repository.RoomRepository;
@@ -22,7 +23,6 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -133,15 +133,15 @@ public class RecordService {
         }
     }
 
-    public RecordResponseDto.ScriptAnalysisInfo analyzeScript(HttpServletRequest httpServletRequest, int id, List<Integer> seq) {
+    public RecordResponseDto.ScriptAnalysisInfo analyzeScript(HttpServletRequest httpServletRequest, RecordRequestDto.ScriptAnalysisInput data) {
         User user = tokenService.getUserByToken(tokenService.resolveToken(httpServletRequest));
 
-        Room room = roomRepository.findByUserAndRoom(user.getName(), id)
+        Room room = roomRepository.findByUserAndRoom(user.getName(), data.getId())
                 .orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST, "사용자가 해당 음성 파일을 가지고 있지 않습니다."));
 
         List<String> script = new ArrayList<>();
 
-        for(int s : seq) {
+        for(int s : data.getSeq()) {
             Record record = recordRepository.findByRoomAndSeq(room.getRoom(), s)
                     .orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 순서(seq)가 존재하지 않습니다."));
 
@@ -153,16 +153,16 @@ public class RecordService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("script", script);
+        MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
+        params.add("script", script);
 
-        HttpEntity<?> request = new HttpEntity<>(params, headers);
+        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(params, headers);
 
         RestTemplate restTemplate = new RestTemplate();
 
         RecordResponseDto.ScriptAnalysisResult response =
                 restTemplate.exchange(url, HttpMethod.POST, request, RecordResponseDto.ScriptAnalysisResult.class).getBody();
 
-        return RecordResponseDto.ScriptAnalysisInfo.of(id, seq, response.getPositive(), response.getNeutral(), response.getNegative());
+        return RecordResponseDto.ScriptAnalysisInfo.of(data.getId(), data.getSeq(), response.getPositive(), response.getNeutral(), response.getNegative());
     }
 }
