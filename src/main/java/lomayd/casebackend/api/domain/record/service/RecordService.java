@@ -23,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -70,7 +71,7 @@ public class RecordService {
     }
 
     public void analyzeRecord(Room room, Talker talker, String fileName, String user, int speakerNum, File file) {
-        String url = "http://localhost:8000/api/record";
+        String url = "http://localhost:8132/api/record";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -148,15 +149,15 @@ public class RecordService {
             script.add(record.getMessage());
         }
 
-        String url = "http://localhost:8000/api/script";
+        String url = "http://localhost:8132/api/script";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
-        params.add("script", script);
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("script", script);
 
-        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(params, headers);
+        HttpEntity<HashMap<String, Object>> request = new HttpEntity<>(params, headers);
 
         RestTemplate restTemplate = new RestTemplate();
 
