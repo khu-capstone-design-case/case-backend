@@ -24,8 +24,6 @@ public class UserService {
 
         if (duplicateId.isPresent())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 존재하는 아이디입니다.");
-        else if (duplicateName.isPresent())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 존재하는 이름입니다.");
         else {
             User user = User.builder()
                     .id(data.getId())

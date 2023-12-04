@@ -39,7 +39,7 @@ public class RecordService {
     public RecordResponseDto.ScriptListInfo getScriptList(HttpServletRequest httpServletRequest, int id) {
         User user = tokenService.getUserByToken(tokenService.resolveToken(httpServletRequest));
 
-        Room room = roomRepository.findByUserAndRoom(user.getName(), id)
+        Room room = roomRepository.findByUserAndRoom(user.getId(), id)
                         .orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST, "사용자가 해당 음성 파일을 가지고 있지 않습니다."));
 
         List<Record> scriptList = recordRepository.findAllByRoom(room.getRoom());
@@ -56,7 +56,7 @@ public class RecordService {
     public void removeScriptList(HttpServletRequest httpServletRequest, int id) {
         User user = tokenService.getUserByToken(tokenService.resolveToken(httpServletRequest));
 
-        Room room = roomRepository.findByUserAndRoom(user.getName(), id)
+        Room room = roomRepository.findByUserAndRoom(user.getId(), id)
                 .orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST, "사용자가 해당 음성 파일을 가지고 있지 않습니다."));
 
         File file = new File("./record/" + room.getFileName());
@@ -137,7 +137,7 @@ public class RecordService {
     public RecordResponseDto.ScriptAnalysisInfo analyzeScript(HttpServletRequest httpServletRequest, RecordRequestDto.ScriptAnalysisInput data) {
         User user = tokenService.getUserByToken(tokenService.resolveToken(httpServletRequest));
 
-        Room room = roomRepository.findByUserAndRoom(user.getName(), data.getId())
+        Room room = roomRepository.findByUserAndRoom(user.getId(), data.getId())
                 .orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST, "사용자가 해당 음성 파일을 가지고 있지 않습니다."));
 
         List<String> script = new ArrayList<>();

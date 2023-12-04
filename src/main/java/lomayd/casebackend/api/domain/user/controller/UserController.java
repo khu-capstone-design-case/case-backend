@@ -57,7 +57,7 @@ public class UserController {
         userService.storeRefreshToken(userService.getUserById(id), token.getRefreshToken());
 
         return ResponseEntity.status(HttpStatus.OK).headers(httpHeaders)
-                .body(UserResponseDto.UserLogin.of(token.getAccessToken(),id));
+                .body(UserResponseDto.UserLogin.of(token.getAccessToken(), id, userService.getUserById(id).getName()));
     }
 
     @PostMapping("/api/user/token")

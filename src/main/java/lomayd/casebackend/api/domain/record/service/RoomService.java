@@ -43,7 +43,7 @@ public class RoomService {
     public RoomResponseDto.RecordListInfo getRecordList(HttpServletRequest httpServletRequest, String opponent) {
         User user = tokenService.getUserByToken(tokenService.resolveToken(httpServletRequest));
 
-        List<Room> recordList = roomRepository.findAllByUserAndOpponent(user.getName(), opponent);
+        List<Room> recordList = roomRepository.findAllByUserAndOpponent(user.getId(), opponent);
 
         List<RoomResponseDto.RecordInfo> recordListInfo = new ArrayList<>();
 
@@ -57,7 +57,7 @@ public class RoomService {
     public void removeRecordList(HttpServletRequest httpServletRequest, String opponent) {
         User user = tokenService.getUserByToken(tokenService.resolveToken(httpServletRequest));
 
-        List<Room> rooms = roomRepository.findAllByUserAndOpponent(user.getName(), opponent);
+        List<Room> rooms = roomRepository.findAllByUserAndOpponent(user.getId(), opponent);
 
         for(Room r : rooms) {
             recordRepository.deleteAllByRoom(r.getRoom());
@@ -67,7 +67,7 @@ public class RoomService {
             file.delete();
         }
 
-        roomRepository.deleteAllByUserAndOpponent(user.getName(), opponent);
+        roomRepository.deleteAllByUserAndOpponent(user.getId(), opponent);
 
         talkerRepository.deleteByOpponent(opponent);
     }
@@ -86,7 +86,7 @@ public class RoomService {
                 .fileName(path)
                 .speakerNum(speakerNum)
                 .title(title)
-                .user(user.getName())
+                .user(user.getId())
                 .opponent(opponent)
                 .timestamp(tempFile.lastModified())
                 .build();
@@ -116,7 +116,7 @@ public class RoomService {
         recordNum++;
         talkerNum++;
 
-        recordService.analyzeRecord(room, talker, path, user.getName(), speakerNum, tempFile);
+        recordService.analyzeRecord(room, talker, path, user.getId(), speakerNum, tempFile);
     }
 
     private String getFileExtension(MultipartFile data) {
