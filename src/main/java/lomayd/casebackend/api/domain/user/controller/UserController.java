@@ -46,8 +46,11 @@ public class UserController {
         ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", token.getRefreshToken())
                 .maxAge(30 * 24 * 60 * 60) // 만료 기한
                 .path("/")
-                .sameSite("None")
-                .secure(true)
+                // .sameSite("None")
+                // .secure(true)
+                // 프론트엔드, 백엔드가 같은 도메인에선 그대로 적용
+                // 프론트엔드, 백엔드가 서로 다른 도메인에선 CORS 설정 + 위 설정 적용 + https 적용 필수
+                // 그대로 안되면 크롬 브라우저 기준 쿠키 차단 설정(chrome://settings/cookies) 확인해볼 것
                 .httpOnly(true)
                 .build();
 

@@ -24,7 +24,7 @@ public class SecurityConfig {
         http.httpBasic().disable()
                 .cors().configurationSource(request -> {
                     var cors = new CorsConfiguration();
-                    cors.setAllowedOrigins(of("http://localhost:3000","http://localhost:8080","http://localhost:5132")); // 허용 Site
+                    cors.setAllowedOrigins(of("http://localhost:3000","http://localhost:8080","http://localhost:8132")); // 허용 Site
                     cors.setAllowedMethods(of("GET","POST", "PATCH", "DELETE")); // 허용 Method
                     cors.setAllowedHeaders(of("*")); // 허용 Header
                     cors.setAllowCredentials(true); // 자격 증명 요청 여부
