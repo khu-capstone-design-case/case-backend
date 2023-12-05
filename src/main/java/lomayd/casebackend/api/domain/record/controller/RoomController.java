@@ -54,8 +54,7 @@ public class RoomController {
     }
 
     @GetMapping("/api/record/upload/progress")
-    public ResponseEntity<Void> getRecordUploadProgress(HttpServletRequest httpServletRequest, @RequestParam int id) {
-        roomService.getRecordUploadProgress(httpServletRequest, id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<RoomResponseDto.RecordProgressInfo> getRecordUploadProgress(HttpServletRequest httpServletRequest, @RequestParam int id) {
+        return ResponseEntity.ok(roomService.getRecordUploadProgress(httpServletRequest, id));
     }
 }
