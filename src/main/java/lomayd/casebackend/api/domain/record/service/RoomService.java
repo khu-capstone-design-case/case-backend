@@ -8,7 +8,6 @@ import lomayd.casebackend.api.domain.record.repository.RoomRepository;
 import lomayd.casebackend.api.domain.user.Talker;
 import lomayd.casebackend.api.domain.user.User;
 import lomayd.casebackend.api.domain.user.repository.TalkerRepository;
-import lomayd.casebackend.api.domain.user.repository.UserRepository;
 import lomayd.casebackend.api.global.security.config.TokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +37,6 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final RecordRepository recordRepository;
     private final TalkerRepository talkerRepository;
-    private final UserRepository userRepository;
     private final RecordService recordService;
     private final TokenService tokenService;
 
@@ -172,11 +170,13 @@ public class RoomService {
         roomRepository.save(room);
     }
 
-    public RoomResponseDto.RecordProgressInfo getRecordUploadProgress(RoomRequestDto.RecordProgressInfo data) {
+    public RoomResponseDto.RecordProgressInfo getRecordUploadProgress(HttpServletRequest httpServletRequest, int id) {
 
-        Room room = roomRepository.findByUserAndRoom(data.getUserId(),data.getRecordId())
+        User user = tokenService.getUserByToken(tokenService.resolveToken(httpServletRequest));
+
+        Room room = roomRepository.findByUserAndRoom(user.getId(), id)
                 .orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 사용자 또는 녹음 파일이 존재 하지 않습니다."));
 
-        return RoomResponseDto.RecordProgressInfo.of(data.getRecordId(), data.getUserId(), room);
+        return RoomResponseDto.RecordProgressInfo.of(id, room);
     }
 }

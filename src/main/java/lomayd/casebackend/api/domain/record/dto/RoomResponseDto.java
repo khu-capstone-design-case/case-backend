@@ -87,14 +87,12 @@ public class RoomResponseDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class RecordProgressInfo {
-        private int recordId;
-        private String userId;
+        private int id;
         private int seq;
 
-        public static RoomResponseDto.RecordProgressInfo of(int recordId, String userId, Room room) {
+        public static RoomResponseDto.RecordProgressInfo of(int id, Room room) {
             return RecordProgressInfo.builder()
-                    .recordId(recordId)
-                    .userId(userId)
+                    .id(id)
                     .seq(room.getSeq())
                     .build();
         }
