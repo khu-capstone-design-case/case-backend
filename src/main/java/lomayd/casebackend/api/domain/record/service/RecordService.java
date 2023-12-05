@@ -132,6 +132,8 @@ public class RecordService {
         talkerRepository.save(talker);
 
         room.setSeq(5);
+
+        roomRepository.save(room);
     }
 
     private String chooseSpeaker(Room room, String index) {
@@ -158,7 +160,7 @@ public class RecordService {
             script.add(record.getMessage());
         }
 
-        String url = "http://" + ip + ":" + port + "/api/record";
+        String url = "http://" + ip + ":" + port + "/api/";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
