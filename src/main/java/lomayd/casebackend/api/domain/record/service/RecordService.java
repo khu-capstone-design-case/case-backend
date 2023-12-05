@@ -160,7 +160,7 @@ public class RecordService {
             script.add(record.getMessage());
         }
 
-        String url = "http://" + ip + ":" + port + "/api/";
+        String url = "http://" + ip + ":" + port + "/api/script";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
