@@ -130,6 +130,8 @@ public class RecordService {
         talker.setNegative((talker.getNegative() * (currentRecord-1) + room.getNegative()) / currentRecord);
 
         talkerRepository.save(talker);
+
+        room.setSeq(5);
     }
 
     private String chooseSpeaker(Room room, String index) {

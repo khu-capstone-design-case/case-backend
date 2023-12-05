@@ -46,4 +46,16 @@ public class RoomController {
     public Resource getRecord(@PathVariable String fileName) throws MalformedURLException {
         return roomService.getRecord(fileName);
     }
+
+    @PostMapping("/api/progress")
+    public ResponseEntity<Void> addRecordUploadProgress(@RequestBody RoomRequestDto.RecordProgressUploadInfo data) {
+        roomService.addRecordUploadProgress(data);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/api/record/upload/progress")
+    public ResponseEntity<Void> getRecordUploadProgress(@RequestBody RoomRequestDto.RecordProgressInfo data) {
+        roomService.getRecordUploadProgress(data);
+        return ResponseEntity.ok().build();
+    }
 }

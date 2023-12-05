@@ -80,4 +80,23 @@ public class RoomResponseDto {
                     .build();
         }
     }
+
+    @Builder
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RecordProgressInfo {
+        private int recordId;
+        private String userId;
+        private int seq;
+
+        public static RoomResponseDto.RecordProgressInfo of(int recordId, String userId, Room room) {
+            return RecordProgressInfo.builder()
+                    .recordId(recordId)
+                    .userId(userId)
+                    .seq(room.getSeq())
+                    .build();
+        }
+    }
 }

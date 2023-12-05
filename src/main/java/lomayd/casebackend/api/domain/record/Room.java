@@ -40,4 +40,6 @@ public class Room {
     private double neutral;
 
     private double negative;
+
+    private int seq;
 }

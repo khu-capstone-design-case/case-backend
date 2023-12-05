@@ -22,4 +22,7 @@ public interface RoomRepository extends MongoRepository<Room, Integer> {
 
     @Query(value="{user:  ?0}", count = true)
     int countByUser(String user);
+
+    @Query(value="{user: ?0, fileName: ?1}")
+    Optional<Room> findByUserAndFileName(String user, String fileName);
 }

@@ -16,4 +16,25 @@ public class RoomRequestDto {
         private String userId;
         private int speakerNum;
     }
+
+    @Builder
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RecordProgressUploadInfo {
+        private String fileName;
+        private String user;
+        private int seq;
+    }
+
+    @Builder
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RecordProgressInfo {
+        private int recordId;
+        private String userId;
+    }
 }
