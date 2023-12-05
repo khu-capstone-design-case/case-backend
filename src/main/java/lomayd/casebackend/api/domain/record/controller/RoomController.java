@@ -1,5 +1,6 @@
 package lomayd.casebackend.api.domain.record.controller;
 
+import lomayd.casebackend.api.domain.record.dto.RoomRequestDto;
 import lomayd.casebackend.api.domain.record.dto.RoomResponseDto;
 import lomayd.casebackend.api.domain.record.service.RoomService;
 import lombok.RequiredArgsConstructor;
@@ -31,14 +32,13 @@ public class RoomController {
     }
 
     @PostMapping("/api/record/upload/init")
-    public ResponseEntity<Void> uploadRecordInit(HttpServletRequest httpServletRequest, @RequestParam String opponent, @RequestParam int speakerNum, @RequestParam String title, @RequestParam MultipartFile file) throws IOException {
-        roomService.uploadRecordInit(httpServletRequest, opponent, speakerNum, title, file);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<RoomResponseDto.RecordUploadInfo> uploadRecordInit(HttpServletRequest httpServletRequest, @RequestParam String opponent, @RequestParam int speakerNum, @RequestParam String title, @RequestParam MultipartFile file) throws IOException {
+        return ResponseEntity.ok(roomService.uploadRecordInit(httpServletRequest, opponent, speakerNum, title, file));
     }
 
     @PostMapping("/api/record/upload/analyze")
-    public ResponseEntity<Void> uploadRecordAnalyze() {
-        roomService.uploadRecordAnalyze();
+    public ResponseEntity<Void> uploadRecordAnalyze(@RequestBody RoomRequestDto.RecordUploadInfo data) {
+        roomService.uploadRecordAnalyze(data);
         return ResponseEntity.ok().build();
     }
 
