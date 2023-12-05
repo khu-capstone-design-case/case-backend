@@ -141,7 +141,7 @@ public class RoomService {
             throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "녹음 파일 확장자를 알 수 없습니다.");
         }
 
-        if (contentType.contains("audio/mp4")) {
+        if (contentType.contains("audio/x-m4a")) {
             return ".m4a";
         }
 
