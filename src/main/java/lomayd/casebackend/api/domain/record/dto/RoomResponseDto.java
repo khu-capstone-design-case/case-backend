@@ -42,6 +42,7 @@ public class RoomResponseDto {
         private double positive;
         private double neutral;
         private double negative;
+        private int seq;
 
         public static RoomResponseDto.RecordInfo of(Room room) {
             return RecordInfo.builder()
@@ -54,6 +55,7 @@ public class RoomResponseDto {
                     .positive(room.getPositive())
                     .neutral(room.getNeutral())
                     .negative(room.getNegative())
+                    .seq(room.getSeq())
                     .build();
         }
     }
