@@ -36,7 +36,7 @@ public class TokenService {
     // accessToken + refreshToken 생성
     public Token generateToken(String id, String role) {
 
-        long accessTokenPeriod = 1000L * 60L * 10L; // 10분
+        long accessTokenPeriod = 1000L * 60L * 60L * 12L; // 12시간
         long refreshTokenPeriod = 1000L * 60L * 60L * 24L * 30L; // 30일
 
         Claims claims = Jwts.claims();
