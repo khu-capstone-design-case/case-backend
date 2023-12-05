@@ -54,7 +54,7 @@ public class RecordService {
         List<RecordResponseDto.ScriptInfo> scriptListInfo = new ArrayList<>();
 
         for(Record r : scriptList) {
-            scriptListInfo.add(RecordResponseDto.ScriptInfo.of(r));
+            scriptListInfo.add(RecordResponseDto.ScriptInfo.of(r, user));
         }
 
         return RecordResponseDto.ScriptListInfo.of(room, scriptListInfo);

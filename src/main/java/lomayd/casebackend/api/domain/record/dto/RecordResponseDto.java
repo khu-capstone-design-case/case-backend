@@ -2,6 +2,7 @@ package lomayd.casebackend.api.domain.record.dto;
 
 import lomayd.casebackend.api.domain.record.Record;
 import lomayd.casebackend.api.domain.record.Room;
+import lomayd.casebackend.api.domain.user.User;
 import lombok.*;
 
 import java.util.List;
@@ -46,10 +47,10 @@ public class RecordResponseDto {
         private double neutral;
         private double negative;
 
-        public static RecordResponseDto.ScriptInfo of(Record record) {
+        public static RecordResponseDto.ScriptInfo of(Record record, User user) {
             return RecordResponseDto.ScriptInfo.builder()
                     .seq(record.getSeq())
-                    .speaker(record.getSpeaker())
+                    .speaker(user.getName())
                     .message(record.getMessage())
                     .startTime(record.getStartTime())
                     .endTime(record.getEndTime())
