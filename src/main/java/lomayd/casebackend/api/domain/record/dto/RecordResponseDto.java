@@ -47,10 +47,10 @@ public class RecordResponseDto {
         private double neutral;
         private double negative;
 
-        public static RecordResponseDto.ScriptInfo of(Record record, User user) {
+        public static RecordResponseDto.ScriptInfo of(Record record) {
             return RecordResponseDto.ScriptInfo.builder()
                     .seq(record.getSeq())
-                    .speaker(user.getName())
+                    .speaker(record.getSpeaker())
                     .message(record.getMessage())
                     .startTime(record.getStartTime())
                     .endTime(record.getEndTime())
