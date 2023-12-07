@@ -92,6 +92,7 @@ public class RoomService {
                 .title(title)
                 .user(user.getId())
                 .opponent(opponent)
+                .summary("")
                 .timestamp(tempFile.lastModified())
                 .build();
 
