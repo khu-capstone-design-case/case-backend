@@ -35,7 +35,7 @@ public class RoomResponseDto {
 
         private int id;
         private String title;
-        private String summary;
+        private List<String> summary;
         private long timestamp;
         private int length;
         private double point;
@@ -45,10 +45,12 @@ public class RoomResponseDto {
         private int seq;
 
         public static RoomResponseDto.RecordInfo of(Room room) {
+            List<String> summaryList = List.of(room.getSummary().split(","));
+
             return RecordInfo.builder()
                     .id(room.getRoom())
                     .title(room.getTitle())
-                    .summary(room.getSummary())
+                    .summary(summaryList)
                     .timestamp(room.getTimestamp())
                     .length(room.getLength())
                     .point(room.getPoint())
